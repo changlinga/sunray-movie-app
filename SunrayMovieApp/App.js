@@ -1,11 +1,20 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { AppearanceProvider, useColorScheme } from "react-native-appearance";
+import { Provider } from "react-redux";
+
+import AppNavigator from "./src/navigation/AppNavigator";
+import store from "./src/store/store";
 
 export default function App() {
+  let theme = useColorScheme();
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
+    <Provider store={store}>
+      <AppearanceProvider>
+        <AppNavigator theme={theme} />
+      </AppearanceProvider>
+    </Provider>
   );
 }
 
