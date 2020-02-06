@@ -1,23 +1,10 @@
 import React, { Component } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Alert,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-  StatusBar,
-  Platform
-} from "react-native";
+import { View, StyleSheet, FlatList, Alert, Dimensions } from "react-native";
 
-import { TMDB_IMAGE_BASE_URL } from "../constants/general";
+import MediaItem from "./MediaItem";
 import { moderateScale } from "../utility/UIScale";
 
-const { width, height } = Dimensions.get("window");
-
-export default class Home extends Component {
+export default class PopularMovies extends Component {
   componentDidMount() {
     this.reload();
   }
@@ -30,30 +17,11 @@ export default class Home extends Component {
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
           data={this.props.movies.popular}
-          renderItem={this.renderItem.bind(this)}
+          renderItem={MediaItem}
         />
       </View>
     );
   }
-
-  renderItem({ item }) {
-    return (
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={this._onItemPressed.bind(this)}
-      >
-        <Image
-          style={styles.itemImage}
-          source={{
-            uri: TMDB_IMAGE_BASE_URL + "/w500" + item.poster_path
-          }}
-        />
-        <Text style={styles.itemTitle}>{item.title}</Text>
-      </TouchableOpacity>
-    );
-  }
-
-  _onItemPressed() {}
 
   reload() {
     this.props.popularMoviesActions().then(() => {
@@ -89,19 +57,5 @@ const styles = StyleSheet.create({
 
   columnWrapperStyle: {
     justifyContent: "space-evenly"
-  },
-
-  itemContainer: {
-    width: moderateScale(width / 2 - 20),
-    marginBottom: moderateScale(10)
-  },
-
-  itemTitle: {
-    fontSize: moderateScale(15),
-    fontWeight: "bold"
-  },
-
-  itemImage: {
-    height: moderateScale(height / 3)
   }
 });
