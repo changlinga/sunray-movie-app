@@ -1,18 +1,18 @@
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Search from "../components/Search";
-import { trendingGetActions } from "../actions/trendingActions";
+import { searchMoviesActions } from "../actions/searchActions";
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    trending: state.trending
+    search: state.search
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      trendingGetActions
+      searchMoviesActions
     },
     dispatch
   );

@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { View, StyleSheet, StatusBar, Platform } from "react-native";
+import { View, StyleSheet, StatusBar, Platform, FlatList } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { HeaderBackButton } from "react-navigation-stack";
+
+import MediaItem from "./MediaItem";
+import { moderateScale } from "../utility/UIScale";
 
 const statusBarHeight =
   Platform.OS === "android"
@@ -29,10 +32,17 @@ export default class Search extends Component {
             lightTheme
             containerStyle={styles.searchBarContainer}
             onChangeText={this._onSearchBarChangeText.bind(this)}
-            placeholder="Search"
+            placeholder="Search Movies"
             value={this.state.search}
           />
         </View>
+        <FlatList
+          numColumns={2}
+          style={styles.listStyle}
+          columnWrapperStyle={styles.columnWrapperStyle}
+          data={this.props.search.movies}
+          renderItem={MediaItem}
+        />
       </View>
     );
   }
@@ -42,22 +52,25 @@ export default class Search extends Component {
       search: text
     });
 
-    let searchItems = text
-      .toLowerCase()
-      .trim()
-      .split(/\s+/);
+    this.props.searchMoviesActions(text).then(() => {
+      const { error } = this.props.search;
 
-    let movies = this.props.movies.popular.filter(movie => {
-      let matches = searchItems.map(searchItem => {
-        return (
-          movie.title && movie.title.toLowerCase().indexOf(searchItem) !== -1
+      if (error) {
+        Alert.alert(
+          error.title,
+          error.message,
+          [
+            {
+              text: "OK"
+            }
+          ],
+          {
+            cancelable: false
+          }
         );
-      });
-
-      return matches.indexOf(false) === -1;
+        return;
+      }
     });
-
-    this.setState({ movies });
   }
 }
 
@@ -75,5 +88,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "transparent",
     borderBottomWidth: 0
+  },
+
+  listStyle: {
+    paddingVertical: moderateScale(10)
+  },
+
+  columnWrapperStyle: {
+    justifyContent: "space-evenly"
   }
 });

@@ -21,7 +21,7 @@ export default ({ item }) => {
           uri: TMDB_IMAGE_BASE_URL + "/w500" + item.poster_path
         }}
       />
-      <Text style={styles.itemTitle}>{item.title}</Text>
+      <Text style={styles.itemTitle}>{item.title || item.name}</Text>
     </TouchableOpacity>
   );
 };
