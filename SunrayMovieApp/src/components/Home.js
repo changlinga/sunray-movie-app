@@ -87,7 +87,7 @@ export default class Home extends Component {
       .trim()
       .split(/\s+/);
 
-    let movies = this.props.movies.movies.filter(movie => {
+    let movies = this.props.movies.popular.filter(movie => {
       let matches = searchItems.map(searchItem => {
         return (
           movie.title && movie.title.toLowerCase().indexOf(searchItem) !== -1
@@ -104,7 +104,7 @@ export default class Home extends Component {
 
   reload() {
     this.props.popularMoviesActions().then(() => {
-      const { movies, error } = this.props.movies;
+      const { popular, error } = this.props.movies;
 
       if (error) {
         Alert.alert(
@@ -123,7 +123,7 @@ export default class Home extends Component {
       }
 
       this.setState({
-        movies
+        movies: popular
       });
     });
   }
