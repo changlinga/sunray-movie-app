@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, StatusBar, Platform } from "react-native";
 import { SearchBar } from "react-native-elements";
+import { HeaderBackButton } from "react-navigation-stack";
 
 const statusBarHeight =
   Platform.OS === "android"
@@ -22,12 +23,16 @@ export default class Search extends Component {
         <View style={{ height: statusBarHeight }}>
           <StatusBar barStyle="light-content" backgroundColor="#000000" />
         </View>
-        <SearchBar
-          lightTheme
-          onChangeText={this._onSearchBarChangeText.bind(this)}
-          placeholder="Search by Title"
-          value={this.state.search}
-        />
+        <View style={styles.topContainer}>
+          <HeaderBackButton onPress={() => this.props.navigation.pop()} />
+          <SearchBar
+            lightTheme
+            containerStyle={styles.searchBarContainer}
+            onChangeText={this._onSearchBarChangeText.bind(this)}
+            placeholder="Search"
+            value={this.state.search}
+          />
+        </View>
       </View>
     );
   }
@@ -59,5 +64,16 @@ export default class Search extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1
+  },
+
+  topContainer: {
+    flexDirection: "row",
+    borderBottomWidth: StyleSheet.hairlineWidth
+  },
+
+  searchBarContainer: {
+    flex: 1,
+    backgroundColor: "transparent",
+    borderBottomWidth: 0
   }
 });
