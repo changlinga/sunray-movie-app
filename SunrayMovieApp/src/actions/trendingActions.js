@@ -2,31 +2,31 @@ import * as types from "../constants/actionTypes";
 import { TMDB_BASE_URL, TMDB_API_KEY } from "../constants/general";
 import CustomError from "../utility/CustomError";
 
-export function popularMoviesRequest() {
+export function trendingGetRequest() {
   return {
-    type: types.POPULAR_MOVIES_REQUEST
+    type: types.TRENDING_GET_REQUEST
   };
 }
 
-export function popularMoviesSuccess(movies) {
+export function trendingGetSuccess(trending) {
   return {
-    type: types.POPULAR_MOVIES_SUCCESS,
-    movies
+    type: types.TRENDING_GET_SUCCESS,
+    trending
   };
 }
 
-export function popularMoviesFailure(error) {
+export function trendingGetFailure(error) {
   return {
-    type: types.POPULAR_MOVIES_FAILURE,
+    type: types.TRENDING_GET_FAILURE,
     error
   };
 }
 
-export function popularMoviesActions() {
+export function trendingGetActions() {
   return dispatch => {
-    dispatch(popularMoviesRequest());
+    dispatch(trendingGetRequest());
 
-    let urlString = TMDB_BASE_URL + "/movie/popular?api_key=" + TMDB_API_KEY;
+    let urlString = TMDB_BASE_URL + "/trending/all/day?api_key=" + TMDB_API_KEY;
 
     return fetch(urlString, {
       method: "GET"
@@ -35,7 +35,7 @@ export function popularMoviesActions() {
         if (response.ok) {
           console.log("Response Success");
           return response.json().then(json => {
-            dispatch(popularMoviesSuccess(json["results"]));
+            dispatch(trendingGetSuccess(json["results"]));
           });
         } else {
           console.log("Response Error");
@@ -43,9 +43,9 @@ export function popularMoviesActions() {
             let customError = new CustomError(
               json.status_code,
               json.status_message,
-              "Retrieve Popular Movies Unsuccessful"
+              "Retrieve Trending Unsuccessful"
             );
-            dispatch(popularMoviesFailure(customError));
+            dispatch(trendingGetFailure(customError));
           });
         }
       })
@@ -53,10 +53,10 @@ export function popularMoviesActions() {
         console.log("Error:", error);
         let customError = new CustomError(
           500,
-          "Unable to retrieve popular movies",
-          "Retrieve Popular Movies Unsuccessful"
+          "Unable to retrieve trending",
+          "Retrieve Trending Unsuccessful"
         );
-        dispatch(popularMoviesFailure(customError));
+        dispatch(trendingGetFailure(customError));
       });
   };
 }

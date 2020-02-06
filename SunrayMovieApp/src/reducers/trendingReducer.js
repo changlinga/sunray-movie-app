@@ -1,27 +1,27 @@
 import * as types from "../constants/actionTypes";
 
 const initialState = {
-  popular: [],
+  trending: [],
   loading: false,
   error: null
 };
 
-function moviesReducer(state = initialState, action) {
+function trendingReducer(state = initialState, action) {
   switch (action.type) {
-    case types.POPULAR_MOVIES_REQUEST:
+    case types.TRENDING_GET_REQUEST:
       return Object.assign({}, state, {
         loading: true,
         error: null
       });
 
-    case types.POPULAR_MOVIES_SUCCESS:
+    case types.TRENDING_GET_SUCCESS:
       return Object.assign({}, state, {
-        popular: action.movies,
+        trending: action.trending,
         loading: false,
         error: null
       });
 
-    case types.POPULAR_MOVIES_FAILURE:
+    case types.TRENDING_GET_FAILURE:
       return Object.assign({}, state, {
         loading: false,
         error: action.error
@@ -32,4 +32,4 @@ function moviesReducer(state = initialState, action) {
   }
 }
 
-export default moviesReducer;
+export default trendingReducer;
