@@ -1,21 +1,21 @@
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import Home from "../components/Home";
-import { popularMoviesActions } from "../actions/moviesActions";
+import Trending from "../components/Trending";
+import { trendingGetActions } from "../actions/trendingActions";
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    movies: state.movies
+    trending: state.trending
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      popularMoviesActions
+      trendingGetActions
     },
     dispatch
   );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Trending);

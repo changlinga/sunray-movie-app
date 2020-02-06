@@ -1,10 +1,35 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
+import { createMaterialTopTabNavigator } from "react-navigation-tabs";
 
-import Home from "../containers/HomeContainer";
+import PopularMovies from "../containers/PopularMoviesContainer";
+import Trending from "../containers/TrendingContainer";
+
+const HomeTabNavigator = createMaterialTopTabNavigator(
+  {
+    PopularMovies: {
+      screen: PopularMovies,
+      navigationOptions: ({ navigation }) => ({
+        title: "Popular"
+      })
+    },
+    Trending: {
+      screen: Trending,
+      navigationOptions: ({ navigation }) => ({
+        title: "Trending"
+      })
+    }
+  },
+  {}
+);
 
 export default createAppContainer(
   createStackNavigator({
-    Home: Home
+    Home: {
+      screen: HomeTabNavigator,
+      navigationOptions: ({ navigation }) => ({
+        title: "Sunray Movie"
+      })
+    }
   })
 );

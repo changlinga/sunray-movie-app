@@ -11,28 +11,13 @@ import {
   StatusBar,
   Platform
 } from "react-native";
-import { SearchBar } from "react-native-elements";
 
 import { TMDB_IMAGE_BASE_URL } from "../constants/general";
 import { moderateScale } from "../utility/UIScale";
 
 const { width, height } = Dimensions.get("window");
 
-const statusBarHeight =
-  Platform.OS === "android"
-    ? StatusBar.currentHeight || (Platform.Version < 23 ? 25 : 24)
-    : 0;
-
 export default class Home extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    headerShown: false
-  });
-
-  state = {
-    search: "",
-    movies: []
-  };
-
   componentDidMount() {
     this.reload();
   }
@@ -40,20 +25,11 @@ export default class Home extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ height: statusBarHeight }}>
-          <StatusBar barStyle="light-content" backgroundColor="#000000" />
-        </View>
-        <SearchBar
-          lightTheme
-          onChangeText={this._onSearchBarChangeText.bind(this)}
-          placeholder="Search by Title"
-          value={this.state.search}
-        />
         <FlatList
           numColumns={2}
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
-          data={this.state.movies}
+          data={this.props.movies.popular}
           renderItem={this.renderItem.bind(this)}
         />
       </View>
@@ -77,34 +53,11 @@ export default class Home extends Component {
     );
   }
 
-  _onSearchBarChangeText(text) {
-    this.setState({
-      search: text
-    });
-
-    let searchItems = text
-      .toLowerCase()
-      .trim()
-      .split(/\s+/);
-
-    let movies = this.props.movies.popular.filter(movie => {
-      let matches = searchItems.map(searchItem => {
-        return (
-          movie.title && movie.title.toLowerCase().indexOf(searchItem) !== -1
-        );
-      });
-
-      return matches.indexOf(false) === -1;
-    });
-
-    this.setState({ movies });
-  }
-
   _onItemPressed() {}
 
   reload() {
     this.props.popularMoviesActions().then(() => {
-      const { popular, error } = this.props.movies;
+      const { error } = this.props.movies;
 
       if (error) {
         Alert.alert(
@@ -121,10 +74,6 @@ export default class Home extends Component {
         );
         return;
       }
-
-      this.setState({
-        movies: popular
-      });
     });
   }
 }
