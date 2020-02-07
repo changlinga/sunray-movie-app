@@ -22,6 +22,26 @@ export function popularMoviesFailure(error) {
   };
 }
 
+export function movieDetailsRequest() {
+  return {
+    type: types.MOVIE_DETAILS_REQUEST
+  };
+}
+
+export function movieDetailsSuccess(movie) {
+  return {
+    type: types.MOVIE_DETAILS_SUCCESS,
+    movie
+  };
+}
+
+export function movieDetailsFailure(error) {
+  return {
+    type: types.MOVIE_DETAILS_FAILURE,
+    error
+  };
+}
+
 export function popularMoviesActions() {
   return dispatch => {
     dispatch(popularMoviesRequest());
@@ -57,6 +77,46 @@ export function popularMoviesActions() {
           "Retrieve Popular Movies Unsuccessful"
         );
         dispatch(popularMoviesFailure(customError));
+      });
+  };
+}
+
+export function movieDetailsAction(movie_id) {
+  return dispatch => {
+    dispatch(movieDetailsRequest());
+
+    let urlString =
+      TMDB_BASE_URL + `/movie/${movie_id}?api_key=${TMDB_API_KEY}`;
+
+    return fetch(urlString, {
+      method: "GET"
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log("Response Success");
+          return response.json().then(json => {
+            dispatch(movieDetailsSuccess(json));
+          });
+        } else {
+          console.log("Response Error");
+          response.json().then(json => {
+            let customError = new CustomError(
+              json.status_code,
+              json.status_message,
+              "Retrieve Movie Unsuccessful"
+            );
+            dispatch(movieDetailsFailure(customError));
+          });
+        }
+      })
+      .catch(error => {
+        console.log("Error:", error);
+        let customError = new CustomError(
+          500,
+          "Unable to retrieve movie",
+          "Retrieve Movie Unsuccessful"
+        );
+        dispatch(movieDetailsFailure(customError));
       });
   };
 }

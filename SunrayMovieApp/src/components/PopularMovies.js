@@ -17,7 +17,11 @@ export default class PopularMovies extends Component {
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
           data={this.props.movies.popular}
-          renderItem={MediaItem}
+          renderItem={({ item }) => (
+            <MediaItem item={item} navigation={this.props.navigation} />
+          )}
+          refreshing={this.props.movies.loading}
+          onRefresh={this.reload.bind(this)}
         />
       </View>
     );

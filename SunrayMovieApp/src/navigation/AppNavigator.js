@@ -7,6 +7,7 @@ import { Icon } from "react-native-elements";
 import PopularMovies from "../containers/PopularMoviesContainer";
 import Trending from "../containers/TrendingContainer";
 import Search from "../containers/SearchContainer";
+import MediaItemDetailsContainer from "../containers/MediaItemDetailsContainer";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { moderateScale } from "../utility/UIScale";
 
@@ -48,6 +49,9 @@ export default createAppContainer(
     },
     Search: {
       screen: Search
+    },
+    MediaItemDetails: {
+      screen: MediaItemDetailsContainer
     }
   })
 );

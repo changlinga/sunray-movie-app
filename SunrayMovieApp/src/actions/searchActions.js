@@ -24,6 +24,14 @@ export function searchMoviesFailure(error) {
 
 export function searchMoviesActions(query) {
   return dispatch => {
+    // if empty query, display empty list
+    if (!query) {
+      return new Promise(resolve => {
+        dispatch(searchMoviesSuccess([]));
+        resolve();
+      });
+    }
+
     dispatch(searchMoviesRequest());
 
     let urlString =

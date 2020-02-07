@@ -12,9 +12,16 @@ import { moderateScale } from "../utility/UIScale";
 
 const { width, height } = Dimensions.get("window");
 
-export default ({ item }) => {
+export default ({ item, navigation }) => {
   return (
-    <TouchableOpacity style={styles.itemContainer} onPress={() => {}}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => {
+        navigation.navigate("MediaItemDetails", {
+          item
+        });
+      }}
+    >
       <Image
         style={styles.itemImage}
         source={{

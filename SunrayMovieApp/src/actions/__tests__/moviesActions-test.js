@@ -21,9 +21,29 @@ describe("Movies Actions", () => {
       });
     });
   });
+
+  it("Creates MOVIE_DETAILS_SUCCESS when retrieve movie is successful", () => {
+    const store = mockStore();
+
+    return store.dispatch(moviesActions.movieDetailsAction(419704)).then(() => {
+      expect(store.getActions()[0]).toEqual(
+        moviesActions.movieDetailsRequest()
+      );
+      expect(store.getActions()[1].error).toBe(undefined);
+      expect(store.getActions()[1].movie).toBeTruthy();
+      verifyMovieDetails(store.getActions()[1].movie);
+    });
+  });
 });
 
 function verifyMovie(movie) {
   expect(movie.title).toBeTruthy();
   expect(movie.poster_path).toBeTruthy();
+}
+
+function verifyMovieDetails(movie) {
+  expect(movie.title).toBeTruthy();
+  expect(movie.backdrop_path).toBeTruthy();
+  expect(movie.genres).toBeTruthy();
+  expect(movie.release_date).toBeTruthy();
 }

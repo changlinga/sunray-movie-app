@@ -17,7 +17,11 @@ export default class Trending extends Component {
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
           data={this.props.trending.trending}
-          renderItem={MediaItem}
+          renderItem={({ item }) => (
+            <MediaItem item={item} navigation={this.props.navigation} />
+          )}
+          refreshing={this.props.trending.loading}
+          onRefresh={this.reload.bind(this)}
         />
       </View>
     );

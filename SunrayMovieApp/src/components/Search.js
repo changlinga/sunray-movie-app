@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { View, StyleSheet, StatusBar, Platform, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  StatusBar,
+  Platform,
+  FlatList,
+  Alert
+} from "react-native";
 import { SearchBar } from "react-native-elements";
 import { HeaderBackButton } from "react-navigation-stack";
 
@@ -41,7 +48,9 @@ export default class Search extends Component {
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
           data={this.props.search.movies}
-          renderItem={MediaItem}
+          renderItem={({ item }) => (
+            <MediaItem item={item} navigation={this.props.navigation} />
+          )}
         />
       </View>
     );
