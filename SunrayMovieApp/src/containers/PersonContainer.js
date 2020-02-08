@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import Person from "../components/Person";
-import { personGetActions } from "../actions/peopleActions";
+import {
+  personGetActions,
+  personMovieCreditsAction
+} from "../actions/peopleActions";
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -12,7 +15,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      personGetActions
+      personGetActions,
+      personMovieCreditsAction
     },
     dispatch
   );

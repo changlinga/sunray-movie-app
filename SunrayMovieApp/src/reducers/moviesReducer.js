@@ -2,6 +2,7 @@ import * as types from "../constants/actionTypes";
 
 const initialState = {
   popular: [],
+  movies: [],
   loading: false,
   error: null
 };
@@ -26,9 +27,13 @@ function moviesReducer(state = initialState, action) {
     case types.MOVIE_DETAILS_SUCCESS:
     case types.MOVIE_CREDITS_SUCCESS:
       return Object.assign({}, state, {
-        popular: state.popular.map(movie =>
-          movie.id === action.movie.id ? { ...movie, ...action.movie } : movie
-        ),
+        movies: state.movies.find(movie => movie.id === action.movie.id)
+          ? state.movies.map(movie =>
+              movie.id === action.movie.id
+                ? { ...movie, ...action.movie }
+                : movie
+            )
+          : [...state.movies, action.movie],
         loading: false,
         error: null
       });

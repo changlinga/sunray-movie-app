@@ -7,8 +7,9 @@ import {
   View,
   Alert
 } from "react-native";
-import { Avatar } from "react-native-elements";
+import { Avatar, ListItem } from "react-native-elements";
 import moment from "moment";
+import { StackActions } from "react-navigation";
 
 import { TMDB_IMAGE_BASE_URL } from "../constants/general";
 import { moderateScale } from "../utility/UIScale";
@@ -40,29 +41,61 @@ export default class Person extends Component {
           />
         }
       >
-        <View style={styles.topContainer}>
-          <Avatar
-            rounded
-            size="xlarge"
-            source={{
-              uri: TMDB_IMAGE_BASE_URL + "/w500" + person.profile_path
-            }}
-          />
-          <Text style={styles.name}>{person.name}</Text>
-          <Text style={styles.caption}>
-            {person.birthday
-              ? `Birthday: ${moment(person.birthday, "YYYY-MM-DD").format(
-                  "D MMMM YYYY"
-                )}`
-              : ""}
-          </Text>
-          <Text style={styles.caption}>
-            {person.place_of_birth
-              ? `Place of birth: ${person.place_of_birth}`
-              : ""}
-          </Text>
+        <View style={styles.mainContainer}>
+          <View style={styles.topContainer}>
+            <Avatar
+              rounded
+              size="xlarge"
+              source={{
+                uri: TMDB_IMAGE_BASE_URL + "/w500" + person.profile_path
+              }}
+            />
+            <Text style={styles.name}>{person.name}</Text>
+            <Text style={styles.caption}>
+              {person.birthday
+                ? `Birthday: ${moment(person.birthday, "YYYY-MM-DD").format(
+                    "D MMMM YYYY"
+                  )}`
+                : ""}
+            </Text>
+            <Text style={styles.caption}>
+              {person.place_of_birth
+                ? `Place of birth: ${person.place_of_birth}`
+                : ""}
+            </Text>
+          </View>
+          <Text style={styles.biography}>{person.biography}</Text>
+          <Text style={styles.itemSubtitle}>Movies</Text>
         </View>
-        <Text style={styles.biography}>{person.biography}</Text>
+        {person.cast &&
+          person.cast.map(c => (
+            <ListItem
+              key={c.id}
+              leftAvatar={{
+                rounded: false,
+                source: { uri: TMDB_IMAGE_BASE_URL + "/w500" + c.poster_path }
+              }}
+              title={c.title}
+              subtitle={c.character}
+              bottomDivider
+              chevron
+              onPress={() => {
+                this.props.navigation.dispatch(
+                  StackActions.push({
+                    routeName: "MediaItemDetails",
+                    params: {
+                      item: {
+                        id: c.id,
+                        title: c.title,
+                        release_date: c.release_date,
+                        backdrop_path: c.backdrop_path
+                      }
+                    }
+                  })
+                );
+              }}
+            />
+          ))}
       </ScrollView>
     );
   }
@@ -70,28 +103,34 @@ export default class Person extends Component {
   reload() {
     const { id } = this.props.navigation.state.params;
 
-    this.props.personGetActions(id).then(() => {
-      const { people, error } = this.props.people;
+    this.props.personGetActions(id).then(this.processDetails.bind(this));
+    this.props
+      .personMovieCreditsAction(id)
+      .then(this.processDetails.bind(this));
+  }
 
-      if (error) {
-        Alert.alert(
-          error.title,
-          error.message,
-          [
-            {
-              text: "OK"
-            }
-          ],
+  processDetails() {
+    const { id } = this.props.navigation.state.params;
+    const { people, error } = this.props.people;
+
+    if (error) {
+      Alert.alert(
+        error.title,
+        error.message,
+        [
           {
-            cancelable: false
+            text: "OK"
           }
-        );
-        return;
-      }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return;
+    }
 
-      this.setState({
-        person: people.find(person => person.id === id)
-      });
+    this.setState({
+      person: people.find(person => person.id === id)
     });
   }
 }
@@ -102,7 +141,11 @@ const styles = StyleSheet.create({
   },
 
   contentContainerStyle: {
-    padding: moderateScale(15)
+    paddingVertical: moderateScale(15)
+  },
+
+  mainContainer: {
+    paddingHorizontal: moderateScale(15)
   },
 
   topContainer: {
@@ -124,5 +167,12 @@ const styles = StyleSheet.create({
     marginTop: moderateScale(15),
     fontSize: moderateScale(15),
     textAlign: "justify"
+  },
+
+  itemSubtitle: {
+    marginTop: moderateScale(15),
+    marginBottom: moderateScale(5),
+    fontSize: moderateScale(20),
+    fontWeight: "bold"
   }
 });

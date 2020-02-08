@@ -11,11 +11,11 @@ import {
   Alert
 } from "react-native";
 import { Avatar } from "react-native-elements";
+import { StackActions } from "react-navigation";
 
 import { TMDB_IMAGE_BASE_URL } from "../constants/general";
 import { moderateScale } from "../utility/UIScale";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { addListener } from "expo/build/Updates/Updates";
 
 const { width, height } = Dimensions.get("window");
 
@@ -52,7 +52,9 @@ export default class MediaItemDetails extends Component {
           <Text style={styles.itemTitle}>{item.title || item.name}</Text>
           <View style={styles.captionContainer1}>
             <Text style={[styles.itemCaption1, styles.itemYear]}>
-              ({item.release_date.substring(0, 4)})
+              {item.release_date
+                ? `(${item.release_date.substring(0, 4)})`
+                : ""}
             </Text>
             <Text style={styles.itemCaption1}>{item.runtime} minutes</Text>
           </View>
@@ -82,10 +84,15 @@ export default class MediaItemDetails extends Component {
       <TouchableOpacity
         style={styles.castContainer}
         onPress={() => {
-          this.props.navigation.navigate("Person", {
-            id: item.id,
-            name: item.name
-          });
+          this.props.navigation.dispatch(
+            StackActions.push({
+              routeName: "Person",
+              params: {
+                id: item.id,
+                name: item.name
+              }
+            })
+          );
         }}
       >
         <Avatar
@@ -109,7 +116,7 @@ export default class MediaItemDetails extends Component {
 
   processDetails() {
     const { item } = this.props.navigation.state.params;
-    const { popular, error } = this.props.movies;
+    const { movies, error } = this.props.movies;
 
     if (error) {
       Alert.alert(
@@ -128,7 +135,7 @@ export default class MediaItemDetails extends Component {
     }
 
     this.props.navigation.setParams({
-      item: popular.find(movie => movie.id === item.id)
+      item: movies.find(movie => movie.id === item.id)
     });
   }
 }
