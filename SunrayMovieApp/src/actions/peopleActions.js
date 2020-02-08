@@ -22,6 +22,26 @@ export function personGetFailure(error) {
   };
 }
 
+export function personMovieCreditsRequest() {
+  return {
+    type: types.PERSON_MOVIE_CREDITS_REQUEST
+  };
+}
+
+export function personMovieCreditsSuccess(person) {
+  return {
+    type: types.PERSON_MOVIE_CREDITS_SUCCESS,
+    person
+  };
+}
+
+export function personMovieCreditsFailure(error) {
+  return {
+    type: types.PERSON_MOVIE_CREDITS_FAILURE,
+    error
+  };
+}
+
 export function personGetActions(person_id) {
   return dispatch => {
     dispatch(personGetRequest());
@@ -58,6 +78,45 @@ export function personGetActions(person_id) {
           "Retrieve Person Unsuccessful"
         );
         dispatch(personGetFailure(customError));
+      });
+  };
+}
+
+export function personMovieCreditsAction(person_id) {
+  return dispatch => {
+    dispatch(personMovieCreditsRequest());
+
+    let urlString = `${TMDB_BASE_URL}/person/${person_id}/movie_credits?api_key=${TMDB_API_KEY}`;
+
+    return fetch(urlString, {
+      method: "GET"
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log("Response Success");
+          return response.json().then(json => {
+            dispatch(personMovieCreditsSuccess(json));
+          });
+        } else {
+          console.log("Response Error");
+          response.json().then(json => {
+            let customError = new CustomError(
+              json.status_code,
+              json.status_message,
+              "Retrieve Movie Credits Unsuccessful"
+            );
+            dispatch(personMovieCreditsFailure(customError));
+          });
+        }
+      })
+      .catch(error => {
+        console.log("Error:", error);
+        let customError = new CustomError(
+          500,
+          "Unable to retrieve movie credits",
+          "Retrieve Movie Credits Unsuccessful"
+        );
+        dispatch(personMovieCreditsFailure(customError));
       });
   };
 }
