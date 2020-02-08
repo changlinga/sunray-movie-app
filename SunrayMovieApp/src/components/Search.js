@@ -27,6 +27,13 @@ export default class Search extends Component {
     search: ""
   };
 
+  componentDidMount() {
+    // Focus method here does not work without delaying the call
+    setTimeout(() => {
+      this.search.focus();
+    }, 100);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -36,6 +43,7 @@ export default class Search extends Component {
         <View style={styles.topContainer}>
           <HeaderBackButton onPress={() => this.props.navigation.pop()} />
           <SearchBar
+            ref={search => (this.search = search)}
             lightTheme
             containerStyle={styles.searchBarContainer}
             onChangeText={this._onSearchBarChangeText.bind(this)}
