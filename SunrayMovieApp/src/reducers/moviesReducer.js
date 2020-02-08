@@ -10,6 +10,7 @@ function moviesReducer(state = initialState, action) {
   switch (action.type) {
     case types.POPULAR_MOVIES_REQUEST:
     case types.MOVIE_DETAILS_REQUEST:
+    case types.MOVIE_CREDITS_REQUEST:
       return Object.assign({}, state, {
         loading: true,
         error: null
@@ -23,6 +24,7 @@ function moviesReducer(state = initialState, action) {
       });
 
     case types.MOVIE_DETAILS_SUCCESS:
+    case types.MOVIE_CREDITS_SUCCESS:
       return Object.assign({}, state, {
         popular: state.popular.map(movie =>
           movie.id === action.movie.id ? { ...movie, ...action.movie } : movie
@@ -33,6 +35,7 @@ function moviesReducer(state = initialState, action) {
 
     case types.POPULAR_MOVIES_FAILURE:
     case types.MOVIE_DETAILS_FAILURE:
+    case types.MOVIE_CREDITS_FAILURE:
       return Object.assign({}, state, {
         loading: false,
         error: action.error

@@ -6,12 +6,15 @@ import {
   Dimensions,
   ScrollView,
   Image,
-  RefreshControl
+  RefreshControl,
+  FlatList
 } from "react-native";
-import { Tile } from "react-native-elements";
+import { Avatar } from "react-native-elements";
 
 import { TMDB_IMAGE_BASE_URL } from "../constants/general";
 import { moderateScale } from "../utility/UIScale";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { addListener } from "expo/build/Updates/Updates";
 
 const { width, height } = Dimensions.get("window");
 
@@ -61,36 +64,62 @@ export default class MediaItemDetails extends Component {
               ))}
           </View>
           <Text style={styles.itemOverview}>{item.overview}</Text>
+          <Text style={styles.itemSubtitle}>Cast</Text>
         </View>
+        <FlatList
+          horizontal={true}
+          data={item.cast}
+          renderItem={this.renderCast.bind(this)}
+          keyExtractor={cast => cast.id.toString()}
+        />
       </ScrollView>
+    );
+  }
+
+  renderCast({ item }) {
+    return (
+      <TouchableOpacity style={styles.castContainer}>
+        <Avatar
+          rounded
+          size={width / 6}
+          source={{
+            uri: TMDB_IMAGE_BASE_URL + "/w500" + item.profile_path
+          }}
+        />
+        <Text style={styles.castName}>{item.name}</Text>
+      </TouchableOpacity>
     );
   }
 
   reload() {
     const { item } = this.props.navigation.state.params;
 
-    this.props.movieDetailsAction(item.id).then(() => {
-      const { popular, error } = this.props.movies;
+    this.props.movieDetailsAction(item.id).then(this.processDetails.bind(this));
+    this.props.movieCreditsAction(item.id).then(this.processDetails.bind(this));
+  }
 
-      if (error) {
-        Alert.alert(
-          error.title,
-          error.message,
-          [
-            {
-              text: "OK"
-            }
-          ],
+  processDetails() {
+    const { item } = this.props.navigation.state.params;
+    const { popular, error } = this.props.movies;
+
+    if (error) {
+      Alert.alert(
+        error.title,
+        error.message,
+        [
           {
-            cancelable: false
+            text: "OK"
           }
-        );
-        return;
-      }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return;
+    }
 
-      this.props.navigation.setParams({
-        item: popular.find(movie => movie.id === item.id)
-      });
+    this.props.navigation.setParams({
+      item: popular.find(movie => movie.id === item.id)
     });
   }
 }
@@ -133,5 +162,22 @@ const styles = StyleSheet.create({
   itemOverview: {
     marginTop: moderateScale(15),
     fontSize: moderateScale(15)
+  },
+
+  itemSubtitle: {
+    marginTop: moderateScale(15),
+    fontSize: moderateScale(15),
+    fontWeight: "bold"
+  },
+
+  castContainer: {
+    width: moderateScale(width / 4.7),
+    paddingHorizontal: moderateScale(5),
+    alignItems: "center"
+  },
+
+  castName: {
+    fontSize: moderateScale(13),
+    textAlign: "center"
   }
 });

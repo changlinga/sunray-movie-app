@@ -5,6 +5,7 @@ import * as moviesActions from "../../actions/moviesActions";
 
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
+const MOVIE_ID = 419704;
 
 describe("Movies Actions", () => {
   it("Creates POPULAR_MOVIES_SUCCESS when retrieve popular movies is successful", () => {
@@ -25,14 +26,31 @@ describe("Movies Actions", () => {
   it("Creates MOVIE_DETAILS_SUCCESS when retrieve movie is successful", () => {
     const store = mockStore();
 
-    return store.dispatch(moviesActions.movieDetailsAction(419704)).then(() => {
-      expect(store.getActions()[0]).toEqual(
-        moviesActions.movieDetailsRequest()
-      );
-      expect(store.getActions()[1].error).toBe(undefined);
-      expect(store.getActions()[1].movie).toBeTruthy();
-      verifyMovieDetails(store.getActions()[1].movie);
-    });
+    return store
+      .dispatch(moviesActions.movieDetailsAction(MOVIE_ID))
+      .then(() => {
+        expect(store.getActions()[0]).toEqual(
+          moviesActions.movieDetailsRequest()
+        );
+        expect(store.getActions()[1].error).toBe(undefined);
+        expect(store.getActions()[1].movie).toBeTruthy();
+        verifyMovieDetails(store.getActions()[1].movie);
+      });
+  });
+
+  it("Creates MOVIE_CREDITS_SUCCESS when retrieve credits is successful", () => {
+    const store = mockStore();
+
+    return store
+      .dispatch(moviesActions.movieCreditsAction(MOVIE_ID))
+      .then(() => {
+        expect(store.getActions()[0]).toEqual(
+          moviesActions.movieCreditsRequest()
+        );
+        expect(store.getActions()[1].error).toBe(undefined);
+        expect(store.getActions()[1].movie).toBeTruthy();
+        verifyMovieCredits(store.getActions()[1].movie);
+      });
   });
 });
 
@@ -46,4 +64,17 @@ function verifyMovieDetails(movie) {
   expect(movie.backdrop_path).toBeTruthy();
   expect(movie.genres).toBeTruthy();
   expect(movie.release_date).toBeTruthy();
+}
+
+function verifyMovieCredits(movie) {
+  expect(Array.isArray(movie.cast)).toBe(true);
+  expect(Array.isArray(movie.crew)).toBe(true);
+  movie.cast.forEach(c => {
+    verifyCast(c);
+  });
+}
+
+function verifyCast(cast) {
+  expect(cast.id).toBeTruthy();
+  expect(cast.name).toBeTruthy();
 }

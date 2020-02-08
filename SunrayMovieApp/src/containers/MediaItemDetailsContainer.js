@@ -1,7 +1,10 @@
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import MediaItemDetails from "../components/MediaItemDetails";
-import { movieDetailsAction } from "../actions/moviesActions";
+import {
+  movieDetailsAction,
+  movieCreditsAction
+} from "../actions/moviesActions";
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -12,7 +15,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
-      movieDetailsAction
+      movieDetailsAction,
+      movieCreditsAction
     },
     dispatch
   );
