@@ -8,7 +8,8 @@ import {
   Image,
   RefreshControl,
   FlatList,
-  Alert
+  Alert,
+  SafeAreaView
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import { StackActions } from "react-navigation";
@@ -33,49 +34,51 @@ export default class MediaItemDetails extends Component {
     const { item } = this.props.navigation.state.params;
 
     return (
-      <ScrollView
-        style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.props.movies.loading}
-            onRefresh={this.reload.bind(this)}
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.movies.loading}
+              onRefresh={this.reload.bind(this)}
+            />
+          }
+        >
+          <Image
+            style={styles.itemImage}
+            source={{
+              uri: TMDB_IMAGE_BASE_URL + "/w500" + item.backdrop_path
+            }}
           />
-        }
-      >
-        <Image
-          style={styles.itemImage}
-          source={{
-            uri: TMDB_IMAGE_BASE_URL + "/w500" + item.backdrop_path
-          }}
-        />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.itemTitle}>{item.title || item.name}</Text>
-          <View style={styles.captionContainer1}>
-            <Text style={[styles.itemCaption1, styles.itemYear]}>
-              {item.release_date
-                ? `(${item.release_date.substring(0, 4)})`
-                : ""}
-            </Text>
-            <Text style={styles.itemCaption1}>{item.runtime} minutes</Text>
+          <View style={styles.detailsContainer}>
+            <Text style={styles.itemTitle}>{item.title || item.name}</Text>
+            <View style={styles.captionContainer1}>
+              <Text style={[styles.itemCaption1, styles.itemYear]}>
+                {item.release_date
+                  ? `(${item.release_date.substring(0, 4)})`
+                  : ""}
+              </Text>
+              <Text style={styles.itemCaption1}>{item.runtime} minutes</Text>
+            </View>
+            <View style={styles.itemGenresContainer}>
+              {item.genres &&
+                item.genres.map((genre, index) => (
+                  <Text key={genre.id} style={styles.itemCaption1}>
+                    {genre.name +
+                      (index !== item.genres.length - 1 ? " | " : "")}
+                  </Text>
+                ))}
+            </View>
+            <Text style={styles.itemOverview}>{item.overview}</Text>
+            <Text style={styles.itemSubtitle}>Cast</Text>
           </View>
-          <View style={styles.itemGenresContainer}>
-            {item.genres &&
-              item.genres.map((genre, index) => (
-                <Text key={genre.id} style={styles.itemCaption1}>
-                  {genre.name + (index !== item.genres.length - 1 ? " | " : "")}
-                </Text>
-              ))}
-          </View>
-          <Text style={styles.itemOverview}>{item.overview}</Text>
-          <Text style={styles.itemSubtitle}>Cast</Text>
-        </View>
-        <FlatList
-          horizontal={true}
-          data={item.cast}
-          renderItem={this.renderCast.bind(this)}
-          keyExtractor={cast => cast.id.toString()}
-        />
-      </ScrollView>
+          <FlatList
+            horizontal={true}
+            data={item.cast}
+            renderItem={this.renderCast.bind(this)}
+            keyExtractor={cast => cast.id.toString()}
+          />
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, FlatList, Alert } from "react-native";
+import { SafeAreaView, StyleSheet, FlatList, Alert } from "react-native";
 
 import MediaItem from "./MediaItem";
 import { moderateScale } from "../utility/UIScale";
@@ -11,7 +11,7 @@ export default class Trending extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <FlatList
           numColumns={2}
           style={styles.listStyle}
@@ -23,7 +23,7 @@ export default class Trending extends Component {
           refreshing={this.props.trending.loading}
           onRefresh={this.reload.bind(this)}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 

@@ -5,7 +5,8 @@ import {
   StatusBar,
   Platform,
   FlatList,
-  Alert
+  Alert,
+  SafeAreaView
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { HeaderBackButton } from "react-navigation-stack";
@@ -24,7 +25,8 @@ export default class Search extends Component {
   });
 
   state = {
-    search: ""
+    search: "",
+    movies: []
   };
 
   componentDidMount() {
@@ -36,9 +38,9 @@ export default class Search extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         <View style={{ height: statusBarHeight }}>
-          <StatusBar barStyle="light-content" backgroundColor="#000000" />
+          <StatusBar barStyle="dark-content" backgroundColor="#000000" />
         </View>
         <View style={styles.topContainer}>
           <HeaderBackButton onPress={() => this.props.navigation.pop()} />
@@ -55,12 +57,12 @@ export default class Search extends Component {
           numColumns={2}
           style={styles.listStyle}
           columnWrapperStyle={styles.columnWrapperStyle}
-          data={this.props.search.movies}
+          data={this.state.movies}
           renderItem={({ item }) => (
             <MediaItem item={item} navigation={this.props.navigation} />
           )}
         />
-      </View>
+      </SafeAreaView>
     );
   }
 
@@ -70,7 +72,7 @@ export default class Search extends Component {
     });
 
     this.props.searchMoviesActions(text).then(() => {
-      const { error } = this.props.search;
+      const { movies, error } = this.props.search;
 
       if (error) {
         Alert.alert(
@@ -87,6 +89,10 @@ export default class Search extends Component {
         );
         return;
       }
+
+      this.setState({
+        movies
+      });
     });
   }
 }
