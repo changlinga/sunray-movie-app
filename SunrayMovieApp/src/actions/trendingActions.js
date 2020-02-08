@@ -26,7 +26,8 @@ export function trendingGetActions() {
   return dispatch => {
     dispatch(trendingGetRequest());
 
-    let urlString = TMDB_BASE_URL + "/trending/all/day?api_key=" + TMDB_API_KEY;
+    let urlString =
+      TMDB_BASE_URL + "/trending/movie/day?api_key=" + TMDB_API_KEY;
 
     return fetch(urlString, {
       method: "GET"
