@@ -8,6 +8,7 @@ import PopularMovies from "../containers/PopularMoviesContainer";
 import Trending from "../containers/TrendingContainer";
 import Search from "../containers/SearchContainer";
 import MediaItemDetailsContainer from "../containers/MediaItemDetailsContainer";
+import PersonContainer from "../containers/PersonContainer";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { moderateScale } from "../utility/UIScale";
 
@@ -52,6 +53,9 @@ export default createAppContainer(
     },
     MediaItemDetails: {
       screen: MediaItemDetailsContainer
+    },
+    Person: {
+      screen: PersonContainer
     }
   })
 );

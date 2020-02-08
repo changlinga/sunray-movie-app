@@ -78,7 +78,15 @@ export default class MediaItemDetails extends Component {
 
   renderCast({ item }) {
     return (
-      <TouchableOpacity style={styles.castContainer}>
+      <TouchableOpacity
+        style={styles.castContainer}
+        onPress={() => {
+          this.props.navigation.navigate("Person", {
+            id: item.id,
+            name: item.name
+          });
+        }}
+      >
         <Avatar
           rounded
           size={width / 6}
@@ -161,7 +169,8 @@ const styles = StyleSheet.create({
 
   itemOverview: {
     marginTop: moderateScale(15),
-    fontSize: moderateScale(15)
+    fontSize: moderateScale(15),
+    textAlign: "justify"
   },
 
   itemSubtitle: {
