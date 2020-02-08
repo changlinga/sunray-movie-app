@@ -62,6 +62,9 @@ export function movieCreditsFailure(error) {
   };
 }
 
+/**
+ * Get a list of the current popular movies.
+ */
 export function popularMoviesActions() {
   return dispatch => {
     dispatch(popularMoviesRequest());
@@ -101,6 +104,10 @@ export function popularMoviesActions() {
   };
 }
 
+/**
+ * Get the primary information about a movie.
+ * @param movie_id
+ */
 export function movieDetailsAction(movie_id) {
   return dispatch => {
     dispatch(movieDetailsRequest());
@@ -141,6 +148,10 @@ export function movieDetailsAction(movie_id) {
   };
 }
 
+/**
+ * Get the cast and crew for a movie.
+ * @param movie_id
+ */
 export function movieCreditsAction(movie_id) {
   return dispatch => {
     dispatch(movieCreditsRequest());

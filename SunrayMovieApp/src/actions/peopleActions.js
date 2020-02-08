@@ -42,6 +42,10 @@ export function personMovieCreditsFailure(error) {
   };
 }
 
+/**
+ * Get the primary person details by id.
+ * @param person_id
+ */
 export function personGetActions(person_id) {
   return dispatch => {
     dispatch(personGetRequest());
@@ -82,6 +86,10 @@ export function personGetActions(person_id) {
   };
 }
 
+/**
+ * Get the movie credits for a person.
+ * @param person_id
+ */
 export function personMovieCreditsAction(person_id) {
   return dispatch => {
     dispatch(personMovieCreditsRequest());

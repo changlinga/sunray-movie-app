@@ -22,6 +22,10 @@ export function searchMoviesFailure(error) {
   };
 }
 
+/**
+ * Search for movies.
+ * @param query
+ */
 export function searchMoviesActions(query) {
   return dispatch => {
     // if empty query, display empty list

@@ -22,6 +22,9 @@ export function trendingGetFailure(error) {
   };
 }
 
+/**
+ * Get the daily trending movies.
+ */
 export function trendingGetActions() {
   return dispatch => {
     dispatch(trendingGetRequest());
