@@ -4,7 +4,8 @@ import {
   StyleSheet,
   RefreshControl,
   Text,
-  View
+  View,
+  Alert
 } from "react-native";
 import { Avatar } from "react-native-elements";
 import moment from "moment";

@@ -7,7 +7,8 @@ import {
   ScrollView,
   Image,
   RefreshControl,
-  FlatList
+  FlatList,
+  Alert
 } from "react-native";
 import { Avatar } from "react-native-elements";
 
